@@ -7,7 +7,7 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center overflow-hidden"
+      className="section-padding relative min-h-screen flex items-center overflow-hidden"
     >
       {/* Background blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -18,7 +18,7 @@ const Hero = () => {
       </div>
 
       {/* ── Centered content wrapper ── */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-6 lg:px-10 pt-28 pb-20">
+      <div className="relative z-10 w-full pt-28 pb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
 
           {/* ── LEFT COLUMN ── */}
@@ -194,20 +194,7 @@ const Hero = () => {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }}
-          className="flex flex-col items-center gap-2 mt-16 md:mt-10"
-        >
-          <p className="text-slate-500 text-[10px] tracking-[0.2em] uppercase font-mono">Scroll</p>
-          <motion.div
-            animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-5 h-8 rounded-full border-2 flex items-start justify-center pt-1"
-            style={{ borderColor: 'rgba(99,102,241,0.35)' }}
-          >
-            <div className="w-1 h-2 rounded-full bg-indigo-400" />
-          </motion.div>
-        </motion.div>
+
       </div>
     </section>
   );

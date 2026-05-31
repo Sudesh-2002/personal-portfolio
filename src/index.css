@@ -229,7 +229,19 @@ pre {
 
 /* Section spacing */
 .section-padding {
-  padding: 100px 0;
+  padding: 100px 5%;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding: 100px 6%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-padding {
+    padding: 100px 8%;
+  }
 }
 
 /* Skill bar animation */

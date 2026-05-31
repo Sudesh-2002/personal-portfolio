@@ -100,7 +100,7 @@ const Skills = () => {
 
   return (
     <section id="skills" className="section-padding" style={{ background: 'rgba(10, 15, 30, 0.5)' }}>
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="w-full">
         <SectionTitle title="Skills & Expertise" subtitle="// what I work with" />
 
         {/* Tech Stack Marquee */}

@@ -142,7 +142,7 @@ const TimelineItem = ({ item, index, isLast }) => (
 const Experience = () => {
   return (
     <section id="experience" className="section-padding" style={{ background: 'rgba(10, 15, 30, 0.5)' }}>
-      <div className="max-w-4xl mx-auto px-6">
+      <div className="w-full">
         <SectionTitle title="Experience & Education" subtitle="// my journey" />
 
         {/* Legend */}

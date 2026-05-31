@@ -218,7 +218,7 @@ const Projects = () => {
 
   return (
     <section id="projects" className="section-padding">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="w-full">
         <SectionTitle title="My Projects" subtitle="// what I've built" />
 
         {/* Filter Tabs */}
