@@ -53,7 +53,7 @@ const Contact = () => {
 
   return (
     <section id="contact" className="section-padding">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="w-full">
         <SectionTitle title="Get In Touch" subtitle="// contact me" />
 
         <div className="grid md:grid-cols-2 gap-12">

@@ -1,57 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sparkles } from 'lucide-react';
 
 const navLinks = [
-  { label: 'Home', href: '#home', number: '01' },
-  { label: 'About', href: '#about', number: '02' },
-  { label: 'Skills', href: '#skills', number: '03' },
-  { label: 'Projects', href: '#projects', number: '04' },
-  { label: 'Experience', href: '#experience', number: '05' },
-  { label: 'Contact', href: '#contact', number: '06' },
+  { label: 'Home',       href: '#home'       },
+  { label: 'About',      href: '#about'      },
+  { label: 'Skills',     href: '#skills'     },
+  { label: 'Projects',   href: '#projects'   },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Contact',    href: '#contact'    },
 ];
 
-/* Pill that slides under the active nav link */
-const ActivePill = ({ activeIndex, refs }) => {
-  const [style, setStyle] = useState({});
-
-  useEffect(() => {
-    const el = refs.current[activeIndex];
-    if (el) {
-      setStyle({ left: el.offsetLeft, width: el.offsetWidth });
-    }
-  }, [activeIndex]);
-
-  return (
-    <motion.div
-      layout
-      animate={style}
-      transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-      className="absolute bottom-0 h-0.5 rounded-full"
-      style={{
-        background: 'linear-gradient(90deg, #6366f1, #06b6d4)',
-        boxShadow: '0 0 12px rgba(99,102,241,0.8)',
-      }}
-    />
-  );
-};
-
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled]   = useState(false);
+  const [menuOpen, setMenuOpen]   = useState(false);
   const [activeSection, setActive] = useState('home');
-  const [hoveredIdx, setHoveredIdx] = useState(null);
-  const linkRefs = useRef([]);
-
-  /* scroll-progress for the thin top bar */
-  const { scrollYProgress } = useScroll();
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
-  const activeIndex = navLinks.findIndex(l => l.href.substring(1) === activeSection);
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 60);
+      setScrolled(window.scrollY > 40);
       const ids = navLinks.map(l => l.href.substring(1));
       for (let i = ids.length - 1; i >= 0; i--) {
         const el = document.getElementById(ids[i]);
@@ -66,232 +33,232 @@ const Navbar = () => {
   }, []);
 
   return (
-    <>
-      {/* ── Scroll-progress bar at very top ── */}
-      <motion.div
-        style={{ scaleX, transformOrigin: '0%' }}
-        className="fixed top-0 left-0 right-0 h-[2px] z-[60]"
-        // gradient from indigo → cyan → pink
-        css={{ background: 'linear-gradient(90deg,#6366f1,#06b6d4,#ec4899)' }}
+    <motion.div
+      initial={{ y: -90, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed top-0 left-0 right-0 z-50 flex justify-center"
+      style={{ padding: '18px 40px' }}
+    >
+      {/* ── Pill container ── */}
+      <div
+        className="w-full flex items-center justify-between"
+        style={{
+          background: scrolled
+            ? 'rgba(5, 8, 22, 0.92)'
+            : 'rgba(5, 8, 22, 0.85)',
+          backdropFilter: 'blur(28px)',
+          WebkitBackdropFilter: 'blur(28px)',
+          border: '1px solid rgba(99,102,241,0.22)',
+          borderRadius: '9999px',
+          padding: '10px 14px 10px 14px',
+          boxShadow: scrolled
+            ? '0 8px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(99,102,241,0.1)'
+            : '0 4px 30px rgba(0,0,0,0.35)',
+          transition: 'all 0.4s ease',
+          minHeight: '68px',
+        }}
       >
-        <div
-          className="w-full h-full"
-          style={{ background: 'linear-gradient(90deg,#6366f1,#06b6d4,#ec4899)' }}
-        />
-      </motion.div>
-
-      {/* ── Main nav ── */}
-      <motion.nav
-        initial={{ y: -110, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed top-0 left-0 right-0 z-50 px-4 pt-3"
-      >
-        <div
-          className={`
-            max-w-6xl mx-auto rounded-2xl transition-all duration-500
-            ${scrolled
-              ? 'py-3 px-6 shadow-2xl'
-              : 'py-4 px-6'
-            }
-          `}
-          style={scrolled ? {
-            background: 'rgba(5,8,22,0.75)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(99,102,241,0.18)',
-            boxShadow: '0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.08)',
-          } : {
-            background: 'transparent',
+        {/* ── S Logo circle ── */}
+        <motion.a
+          href="#home"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.94 }}
+          className="flex-shrink-0 flex items-center justify-center relative"
+          style={{
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+            boxShadow: '0 0 0 2px rgba(99,102,241,0.35), 0 0 20px rgba(99,102,241,0.3)',
           }}
         >
-          <div className="flex items-center justify-between">
+          {/* Spinning border ring */}
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: 'conic-gradient(from 0deg, #6366f1, #06b6d4, #ec4899, #6366f1)',
+              padding: '2px',
+              borderRadius: '50%',
+              opacity: 0.7,
+            }}
+          />
+          <span
+            className="relative z-10 font-black text-white"
+            style={{ fontSize: '22px', fontFamily: 'Space Grotesk', letterSpacing: '-0.03em' }}
+          >
+            S
+          </span>
+        </motion.a>
 
-            {/* ── Desktop links (centered / left) ── */}
-            <div className="hidden md:flex items-center gap-2 relative">
-              <div className="relative flex items-center gap-2">
-                <div className="relative">
-                  <ActivePill activeIndex={activeIndex} refs={linkRefs} />
-                </div>
-
-                {navLinks.map((link, i) => {
-                  const isActive = activeSection === link.href.substring(1);
-                  const isHovered = hoveredIdx === i;
-
-                  return (
-                    <motion.a
-                      key={link.label}
-                      ref={el => (linkRefs.current[i] = el)}
-                      href={link.href}
-                      onMouseEnter={() => setHoveredIdx(i)}
-                      onMouseLeave={() => setHoveredIdx(null)}
-                      whileHover={{ y: -1 }}
-                      className="relative flex flex-col items-center px-5 py-2.5 rounded-lg transition-all duration-200 group"
-                      style={{
-                        background: isHovered
-                          ? 'rgba(99,102,241,0.08)'
-                          : 'transparent',
-                      }}
-                    >
-                      {/* Number */}
-                      <span
-                        className="text-[10px] font-mono leading-none mb-0.5 transition-colors duration-200"
-                        style={{ color: isActive ? '#6366f1' : '#334155' }}
-                      >
-                        {link.number}
-                      </span>
-                      {/* Label */}
-                      <span
-                        className="text-[16px] font-semibold transition-colors duration-200"
-                        style={{
-                          color: isActive ? '#e0e7ff' : '#94a3b8',
-                          fontFamily: 'Space Grotesk',
-                        }}
-                      >
-                        {link.label}
-                      </span>
-
-                      {/* Glow dot on hover */}
-                      <AnimatePresence>
-                        {isHovered && !isActive && (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0 }}
-                            className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full"
-                            style={{ background: '#6366f1', boxShadow: '0 0 6px #6366f1' }}
-                          />
-                        )}
-                      </AnimatePresence>
-                    </motion.a>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* ── CTA + mobile toggle (right side) ── */}
-            <div className="flex items-center gap-4">
-              {/* Hire Me button — desktop */}
+        {/* ── Desktop nav links ── */}
+        <nav className="hidden md:flex items-center" style={{ gap: '6px' }}>
+          {navLinks.map(link => {
+            const isActive = activeSection === link.href.substring(1);
+            return (
               <motion.a
-                href="#contact"
-                className="hidden md:flex items-center gap-2 px-7 py-3 rounded-xl text-base font-bold text-white relative overflow-hidden group"
-                whileHover={{ scale: 1.06 }}
-                whileTap={{ scale: 0.95 }}
+                key={link.label}
+                href={link.href}
+                whileHover={{ y: -1 }}
+                className="relative px-5 py-2.5 rounded-full font-semibold transition-all duration-200"
                 style={{
-                  background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
-                  boxShadow: '0 0 0 0 rgba(99,102,241,0)',
-                  transition: 'box-shadow 0.3s ease',
+                  fontSize: '16px',
+                  fontFamily: 'Space Grotesk',
+                  color: isActive ? '#ffffff' : 'rgba(148,163,184,0.9)',
+                  background: isActive ? 'rgba(99,102,241,0.18)' : 'transparent',
+                  letterSpacing: '0.01em',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.boxShadow = '0 0 24px rgba(99,102,241,0.55), 0 0 48px rgba(99,102,241,0.2)';
+                  if (!isActive) e.currentTarget.style.color = '#e0e7ff';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.boxShadow = '0 0 0 0 rgba(99,102,241,0)';
+                  if (!isActive) e.currentTarget.style.color = 'rgba(148,163,184,0.9)';
                 }}
               >
-                {/* Shimmer sweep */}
-                <motion.div
-                  className="absolute inset-0"
-                  style={{
-                    background: 'linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.18) 50%,transparent 60%)',
-                    backgroundSize: '200% 100%',
-                  }}
-                  animate={{ backgroundPosition: ['-200% 0', '200% 0'] }}
-                  transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 1.5 }}
-                />
-                <Sparkles size={16} className="relative z-10" />
-                <span className="relative z-10">Hire Me</span>
+                {link.label}
+                {/* Active underline dot */}
+                {isActive && (
+                  <motion.div
+                    layoutId="active-dot"
+                    className="absolute bottom-1.5 left-1/2 -translate-x-1/2 rounded-full"
+                    style={{
+                      width: '4px',
+                      height: '4px',
+                      background: '#6366f1',
+                      boxShadow: '0 0 8px #6366f1',
+                    }}
+                  />
+                )}
               </motion.a>
+            );
+          })}
+        </nav>
 
-              {/* Mobile toggle */}
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setMenuOpen(o => !o)}
-                className="md:hidden w-11 h-11 rounded-xl flex items-center justify-center text-slate-300"
-                style={{
-                  background: 'rgba(99,102,241,0.12)',
-                  border: '1px solid rgba(99,102,241,0.25)',
-                }}
-              >
-                <AnimatePresence mode="wait" initial={false}>
-                  {menuOpen
-                    ? <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}><X size={22} /></motion.span>
-                    : <motion.span key="m" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}><Menu size={22} /></motion.span>
-                  }
-                </AnimatePresence>
-              </motion.button>
-            </div>
-          </div>
+        {/* ── Hire Me pill button ── */}
+        <div className="flex items-center gap-3">
+          <motion.a
+            href="#contact"
+            className="hidden md:flex items-center gap-2 font-bold text-white relative overflow-hidden"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.96 }}
+            style={{
+              fontSize: '15px',
+              fontFamily: 'Space Grotesk',
+              padding: '10px 24px',
+              borderRadius: '9999px',
+              background: 'transparent',
+              border: '1.5px solid rgba(99,102,241,0.55)',
+              color: '#c7d2fe',
+              letterSpacing: '0.02em',
+              transition: 'all 0.25s ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'rgba(99,102,241,0.18)';
+              e.currentTarget.style.borderColor = 'rgba(99,102,241,0.9)';
+              e.currentTarget.style.color = '#ffffff';
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(99,102,241,0.35)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.borderColor = 'rgba(99,102,241,0.55)';
+              e.currentTarget.style.color = '#c7d2fe';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            <Sparkles size={15} />
+            Hire Me
+          </motion.a>
+
+          {/* Mobile toggle */}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setMenuOpen(o => !o)}
+            className="md:hidden flex items-center justify-center text-slate-300"
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '50%',
+              background: 'rgba(99,102,241,0.12)',
+              border: '1px solid rgba(99,102,241,0.3)',
+            }}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {menuOpen
+                ? <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}><X size={20} /></motion.span>
+                : <motion.span key="m" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}><Menu size={20} /></motion.span>
+              }
+            </AnimatePresence>
+          </motion.button>
         </div>
+      </div>
 
-        {/* ── Mobile drawer ── */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              key="mobile-menu"
-              initial={{ opacity: 0, y: -12, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -12, scale: 0.97 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="md:hidden max-w-6xl mx-auto mt-2 rounded-2xl overflow-hidden"
-              style={{
-                background: 'rgba(5,8,22,0.92)',
-                backdropFilter: 'blur(24px)',
-                border: '1px solid rgba(99,102,241,0.18)',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
-              }}
-            >
-              <div className="flex flex-col p-4 gap-1">
-                {navLinks.map((link, i) => {
-                  const isActive = activeSection === link.href.substring(1);
-                  return (
-                    <motion.a
-                      key={link.label}
-                      href={link.href}
-                      onClick={() => setMenuOpen(false)}
-                      initial={{ opacity: 0, x: -16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
-                      style={{
-                        background: isActive ? 'rgba(99,102,241,0.15)' : 'transparent',
-                        border: isActive ? '1px solid rgba(99,102,241,0.3)' : '1px solid transparent',
-                      }}
-                    >
-                      <span className="text-[10px] font-mono text-indigo-500">{link.number}</span>
-                      <span
-                        className="font-semibold text-sm"
-                        style={{ color: isActive ? '#e0e7ff' : '#94a3b8', fontFamily: 'Space Grotesk' }}
-                      >
-                        {link.label}
-                      </span>
-                      {isActive && (
-                        <div
-                          className="ml-auto w-1.5 h-1.5 rounded-full"
-                          style={{ background: '#6366f1', boxShadow: '0 0 8px #6366f1' }}
-                        />
-                      )}
-                    </motion.a>
-                  );
-                })}
-
-                <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(99,102,241,0.15)' }}>
-                  <a
-                    href="#contact"
+      {/* ── Mobile dropdown ── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -10, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.97 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+            className="absolute top-full mt-2 left-10 right-10 rounded-3xl overflow-hidden md:hidden"
+            style={{
+              background: 'rgba(5,8,22,0.96)',
+              backdropFilter: 'blur(28px)',
+              border: '1px solid rgba(99,102,241,0.2)',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+            }}
+          >
+            <div className="flex flex-col p-4 gap-1">
+              {navLinks.map((link, i) => {
+                const isActive = activeSection === link.href.substring(1);
+                return (
+                  <motion.a
+                    key={link.label}
+                    href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-bold text-sm text-white"
-                    style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}
+                    initial={{ opacity: 0, x: -14 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all duration-200"
+                    style={{
+                      background: isActive ? 'rgba(99,102,241,0.15)' : 'transparent',
+                      border: isActive ? '1px solid rgba(99,102,241,0.3)' : '1px solid transparent',
+                      color: isActive ? '#e0e7ff' : '#94a3b8',
+                      fontSize: '16px',
+                      fontFamily: 'Space Grotesk',
+                      fontWeight: 600,
+                    }}
                   >
-                    <Sparkles size={14} />
-                    Hire Me
-                  </a>
-                </div>
+                    {isActive && (
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#6366f1', boxShadow: '0 0 8px #6366f1' }} />
+                    )}
+                    {link.label}
+                  </motion.a>
+                );
+              })}
+              <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(99,102,241,0.15)' }}>
+                <a
+                  href="#contact"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl font-bold text-white"
+                  style={{
+                    background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
+                    fontSize: '15px',
+                    fontFamily: 'Space Grotesk',
+                  }}
+                >
+                  <Sparkles size={15} />
+                  Hire Me
+                </a>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
-    </>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
