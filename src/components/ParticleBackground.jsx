@@ -8,8 +8,7 @@ const ParticleBackground = () => {
     const ctx = canvas.getContext('2d');
     let animationFrameId;
     let particles = [];
-    let mouseX = 0;
-    let mouseY = 0;
+    let mouseX = 0, mouseY = 0;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -17,37 +16,38 @@ const ParticleBackground = () => {
     };
     resize();
     window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
 
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
+    // Gold and silver palette
+    const colors = [
+      'rgba(201,162,39,',
+      'rgba(232,197,71,',
+      'rgba(176,190,197,',
+      'rgba(232,237,245,',
+      'rgba(139,105,20,',
+    ];
 
     class Particle {
-      constructor() {
-        this.reset();
-      }
+      constructor() { this.reset(); }
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.4;
-        this.vy = (Math.random() - 0.5) * 0.4;
-        this.radius = Math.random() * 1.5 + 0.5;
-        this.opacity = Math.random() * 0.5 + 0.1;
-        this.color = Math.random() > 0.5
-          ? `rgba(99, 102, 241, ${this.opacity})`
-          : Math.random() > 0.5
-            ? `rgba(6, 182, 212, ${this.opacity})`
-            : `rgba(139, 92, 246, ${this.opacity})`;
+        this.vx = (Math.random() - 0.5) * 0.35;
+        this.vy = (Math.random() - 0.5) * 0.35;
+        this.radius = Math.random() * 1.2 + 0.3;
+        this.opacity = Math.random() * 0.45 + 0.1;
+        const c = colors[Math.floor(Math.random() * colors.length)];
+        this.color = c + this.opacity + ')';
+        this.baseColor = c;
       }
       update() {
         const dx = mouseX - this.x;
         const dy = mouseY - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 150) {
-          const force = (150 - dist) / 150;
-          this.vx -= (dx / dist) * force * 0.5;
-          this.vy -= (dy / dist) * force * 0.5;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 180) {
+          const force = (180 - dist) / 180;
+          this.vx -= (dx / dist) * force * 0.4;
+          this.vy -= (dy / dist) * force * 0.4;
         }
         this.vx *= 0.99;
         this.vy *= 0.99;
@@ -64,20 +64,18 @@ const ParticleBackground = () => {
       }
     }
 
-    // Initialize particles
-    for (let i = 0; i < 120; i++) {
-      particles.push(new Particle());
-    }
+    for (let i = 0; i < 130; i++) particles.push(new Particle());
 
     const drawConnections = () => {
       for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
+        for (let j = i+1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          const dist = Math.sqrt(dx*dx + dy*dy);
           if (dist < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(99, 102, 241, ${0.15 * (1 - dist / 100)})`;
+            const alpha = 0.12 * (1 - dist/100);
+            ctx.strokeStyle = `rgba(201,162,39,${alpha})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -89,10 +87,7 @@ const ParticleBackground = () => {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
+      particles.forEach(p => { p.update(); p.draw(); });
       drawConnections();
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -108,14 +103,9 @@ const ParticleBackground = () => {
     <canvas
       ref={canvasRef}
       style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
-        zIndex: 0,
-        opacity: 0.7,
+        position: 'fixed', top: 0, left: 0,
+        width: '100%', height: '100%',
+        pointerEvents: 'none', zIndex: 0, opacity: 0.65,
       }}
     />
   );

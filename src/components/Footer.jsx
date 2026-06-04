@@ -1,94 +1,64 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Code2, Heart, GitFork, Link2, Share2, ArrowUp } from 'lucide-react';
+import { GitFork as Github, Link2 as Linkedin, Share2 as Twitter, Mail, Heart } from 'lucide-react';
 
-const Footer = () => {
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+const Footer = () => (
+  <footer
+    className="relative py-12 px-8"
+    style={{ borderTop: '1px solid rgba(201,162,39,0.1)', background: 'rgba(3,7,18,0.8)' }}
+  >
+    {/* Top gold line */}
+    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(201,162,39,0.4), transparent)' }} />
 
-  return (
-    <footer
-      className="relative py-12 border-t"
-      style={{
-        borderColor: 'rgba(99, 102, 241, 0.15)',
-        background: 'rgba(5, 8, 22, 0.8)',
-      }}
-    >
-      <div className="w-full">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Logo */}
-          <motion.div
-            className="flex items-center gap-2"
-            whileHover={{ scale: 1.05 }}
+    <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* Logo */}
+      <motion.a href="#home" whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
+        <div
+          className="w-9 h-9 rounded-full flex items-center justify-center"
+          style={{ background: 'linear-gradient(135deg, #c9a227, #8b6914)', boxShadow: '0 0 16px rgba(201,162,39,0.3)' }}
+        >
+          <span style={{ fontFamily: 'Cinzel, serif', fontWeight: 900, fontSize: '15px', color: '#030712' }}>S</span>
+        </div>
+        <div>
+          <p style={{ fontFamily: 'Cinzel, serif', color: '#c9a227', fontWeight: 700, fontSize: '13px', letterSpacing: '0.1em' }}>SUDESH HANSIKA</p>
+          <p style={{ fontFamily: 'JetBrains Mono, monospace', color: '#455a64', fontSize: '10px', letterSpacing: '0.05em' }}>Software Engineer</p>
+        </div>
+      </motion.a>
+
+      {/* Center */}
+      <p className="text-xs text-center" style={{ color: '#455a64', fontFamily: 'JetBrains Mono, monospace' }}>
+        Built with <Heart size={10} style={{ display: 'inline', color: '#c9a227' }} /> using React & Three.js
+        <br />
+        <span style={{ color: '#37474f' }}>© {new Date().getFullYear()} Sudesh Hansika. All rights reserved.</span>
+      </p>
+
+      {/* Socials */}
+      <div className="flex gap-3">
+        {[
+          { icon: Github, href: 'https://github.com/Sudesh-2002' },
+          { icon: Linkedin, href: 'https://linkedin.com/in/sudeshhansika' },
+          { icon: Twitter, href: 'https://twitter.com/sudeshhansika' },
+          { icon: Mail, href: 'mailto:sudeshhansika@gmail.com' },
+        ].map(({ icon: Icon, href }, i) => (
+          <motion.a
+            key={i}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.15, y: -2 }}
+            className="w-9 h-9 rounded-full flex items-center justify-center"
+            style={{
+              background: 'rgba(201,162,39,0.06)',
+              border: '1px solid rgba(201,162,39,0.15)',
+              color: '#607d8b',
+            }}
           >
-            <div
-              className="w-9 h-9 rounded-lg flex items-center justify-center"
-              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
-            >
-              <Code2 size={18} className="text-white" />
-            </div>
-            <span
-              className="font-bold text-lg gradient-text"
-              style={{ fontFamily: 'Space Grotesk' }}
-            >
-              Sudesh<span style={{ color: '#06b6d4' }}>.dev</span>
-            </span>
-          </motion.div>
-
-          {/* Copyright */}
-          <p className="text-slate-500 text-sm flex items-center gap-1.5">
-            Designed & Built with
-            <motion.span
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-            >
-              <Heart size={14} className="text-pink-500 fill-pink-500" />
-            </motion.span>
-            by <span className="text-white font-medium">Sudesh Hansika</span>
-            <span>&copy; {new Date().getFullYear()}</span>
-          </p>
-
-          {/* Social + Scroll Top */}
-          <div className="flex items-center gap-3">
-            {[
-              { icon: GitFork, href: 'https://github.com/sudeshhansika' },
-              { icon: Link2, href: 'https://linkedin.com/in/sudeshhansika' },
-              { icon: Share2, href: 'https://twitter.com/sudeshhansika' },
-            ].map(({ icon: Icon, href }) => (
-              <motion.a
-                key={href}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.2, y: -2 }}
-                className="w-9 h-9 rounded-full flex items-center justify-center text-slate-400 hover:text-white transition-colors"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(99,102,241,0.2)' }}
-              >
-                <Icon size={16} />
-              </motion.a>
-            ))}
-
-            <motion.button
-              onClick={scrollToTop}
-              whileHover={{ scale: 1.15, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-white ml-2"
-              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}
-              title="Back to top"
-            >
-              <ArrowUp size={16} />
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Bottom line */}
-        <div className="mt-8 text-center">
-          <p className="text-slate-600 text-xs font-mono">
-            &lt;Built with React + Tailwind + Framer Motion /&gt;
-          </p>
-        </div>
+            <Icon size={15} />
+          </motion.a>
+        ))}
       </div>
-    </footer>
-  );
-};
+    </div>
+  </footer>
+);
 
 export default Footer;
