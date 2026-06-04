@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GitFork, ExternalLink, Star } from 'lucide-react';
+import { GitFork as Github, ExternalLink, Star } from 'lucide-react';
 import { SectionTitle } from './About';
 
 const projects = [
@@ -10,11 +10,10 @@ const projects = [
     category: 'Full Stack',
     description: 'A comprehensive internship management platform connecting students, companies, and administrators. Features real-time notifications, advanced search, and analytics dashboard.',
     tech: ['React', 'Laravel', 'MySQL', 'Tailwind', 'Redis'],
-    github: 'https://github.com/sudeshhansika/internhub',
+    github: 'https://github.com/Sudesh-2002/internhub',
     live: '#',
     featured: true,
-    gradient: 'from-indigo-500 to-purple-600',
-    color: '#6366f1',
+    accentColor: '#c9a227',
   },
   {
     id: 2,
@@ -22,23 +21,21 @@ const projects = [
     category: 'Full Stack',
     description: 'A modern e-commerce platform with real-time inventory, payment gateway integration, and a beautiful product catalog with advanced filtering.',
     tech: ['Next.js', 'Node.js', 'MongoDB', 'Stripe', 'Redis'],
-    github: 'https://github.com/sudeshhansika/ecommerce',
+    github: 'https://github.com/Sudesh-2002/ecommerce',
     live: '#',
     featured: true,
-    gradient: 'from-cyan-500 to-blue-600',
-    color: '#06b6d4',
+    accentColor: '#b0bec5',
   },
   {
     id: 3,
     title: 'AI Chat Application',
     category: 'AI/ML',
-    description: 'Real-time AI-powered chat app integrating OpenAI GPT. Features conversation history, context management, and custom personality modes.',
+    description: 'Real-time AI-powered chat app integrating OpenAI GPT with conversation history, context management, and custom personality modes.',
     tech: ['React', 'Node.js', 'OpenAI', 'Socket.io', 'MongoDB'],
-    github: 'https://github.com/sudeshhansika/ai-chat',
+    github: 'https://github.com/Sudesh-2002/ai-chat',
     live: '#',
     featured: false,
-    gradient: 'from-pink-500 to-rose-600',
-    color: '#ec4899',
+    accentColor: '#e8c547',
   },
   {
     id: 4,
@@ -46,197 +43,160 @@ const projects = [
     category: 'Frontend',
     description: 'A Notion-inspired task management tool with drag-and-drop boards, team collaboration, real-time updates, and productivity analytics.',
     tech: ['React', 'TypeScript', 'Firebase', 'DND Kit', 'Zustand'],
-    github: 'https://github.com/sudeshhansika/taskflow',
+    github: 'https://github.com/Sudesh-2002/taskflow',
     live: '#',
     featured: false,
-    gradient: 'from-amber-500 to-orange-600',
-    color: '#f59e0b',
+    accentColor: '#c9a227',
   },
   {
     id: 5,
     title: 'Weather Dashboard',
     category: 'Frontend',
-    description: 'A beautiful weather dashboard with animated weather icons, 7-day forecasts, air quality index, and location-based weather alerts.',
+    description: 'A beautiful weather dashboard with animated icons, 7-day forecasts, air quality index, and location-based weather alerts.',
     tech: ['React', 'TypeScript', 'Chart.js', 'Weather API', 'Tailwind'],
-    github: 'https://github.com/sudeshhansika/weather-dash',
+    github: 'https://github.com/Sudesh-2002/weather-dash',
     live: '#',
     featured: false,
-    gradient: 'from-sky-500 to-cyan-600',
-    color: '#0ea5e9',
+    accentColor: '#b0bec5',
   },
   {
     id: 6,
     title: 'Portfolio Website',
     category: 'Frontend',
-    description: 'This very portfolio! Built with React, Tailwind, Framer Motion, and Three.js. Features particle animations, 3D elements, and smooth transitions.',
+    description: 'This very portfolio! Built with React, Tailwind, Framer Motion, and Three.js. Features 3D animations, custom cursor, and gold/silver aesthetics.',
     tech: ['React', 'Tailwind', 'Framer Motion', 'Three.js', 'Vite'],
-    github: 'https://github.com/sudeshhansika/portfolio',
+    github: 'https://github.com/Sudesh-2002/personal-portfolio',
     live: '#',
     featured: false,
-    gradient: 'from-violet-500 to-purple-600',
-    color: '#8b5cf6',
+    accentColor: '#e8c547',
   },
 ];
 
 const categories = ['All', 'Full Stack', 'Frontend', 'AI/ML'];
 
-const ProjectCard = ({ project, index }) => {
-  const [hovered, setHovered] = useState(false);
+const ProjectCard = ({ project, index }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ delay: index * 0.1 }}
+    viewport={{ once: true }}
+    whileHover={{ y: -8 }}
+    className="project-card glass-card rounded-2xl overflow-hidden group relative"
+    style={{ border: `1px solid rgba(${project.accentColor === '#c9a227' ? '201,162,39' : project.accentColor === '#b0bec5' ? '176,190,197' : '232,197,71'},0.1)` }}
+  >
+    {/* Top accent line */}
+    <div className="h-px w-full" style={{ background: `linear-gradient(90deg, transparent, ${project.accentColor}, transparent)` }} />
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
-      viewport={{ once: true }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      className="project-card glass-card rounded-2xl overflow-hidden cursor-pointer group"
-      style={{ border: `1px solid rgba(255,255,255,0.06)` }}
-    >
-      {/* Image / Banner area */}
-      <div
-        className={`relative h-48 bg-gradient-to-br ${project.gradient} overflow-hidden`}
-      >
-        {/* Animated mesh/grid pattern */}
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '30px 30px',
-          }}
-        />
-
-        {/* Project Number */}
-        <div className="absolute top-4 left-4">
+    {/* Card content */}
+    <div className="p-6">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          {project.featured && (
+            <span
+              className="inline-flex items-center gap-1 text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-full mb-2"
+              style={{
+                background: 'rgba(201,162,39,0.1)',
+                border: '1px solid rgba(201,162,39,0.25)',
+                color: '#c9a227',
+                fontFamily: 'JetBrains Mono, monospace',
+              }}
+            >
+              <Star size={8} fill="currentColor" /> Featured
+            </span>
+          )}
+          <h3 className="text-lg font-bold text-white" style={{ fontFamily: 'Cinzel, serif', fontSize: '15px' }}>
+            {project.title}
+          </h3>
           <span
-            className="text-xs font-mono font-bold px-2 py-1 rounded-md"
-            style={{ background: 'rgba(0,0,0,0.3)', color: 'rgba(255,255,255,0.8)' }}
+            className="text-xs tracking-wider"
+            style={{ color: project.accentColor, fontFamily: 'JetBrains Mono, monospace' }}
           >
             {project.category}
           </span>
         </div>
 
-        {/* Featured badge */}
-        {project.featured && (
-          <div className="absolute top-4 right-4">
-            <span
-              className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-md"
-              style={{ background: 'rgba(0,0,0,0.4)', color: '#fbbf24' }}
-            >
-              <Star size={10} fill="#fbbf24" />
-              Featured
-            </span>
-          </div>
-        )}
-
-        {/* Large number in background */}
-        <div
-          className="absolute -bottom-4 -right-2 text-8xl font-black opacity-10 text-white"
-          style={{ fontFamily: 'Space Grotesk' }}
-        >
-          0{project.id}
-        </div>
-
-        {/* Hover overlay with links */}
-        <AnimatePresence>
-          {hovered && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 flex items-center justify-center gap-4"
-              style={{ background: 'rgba(0,0,0,0.4)' }}
-            >
-              <motion.a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 text-white text-sm font-medium hover:bg-black/80 transition-colors"
-              >
-                <GitFork size={16} />
-                Code
-              </motion.a>
-              <motion.a
-                href={project.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                onClick={(e) => e.stopPropagation()}
-                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors"
-                style={{ background: project.color, color: 'white' }}
-              >
-                <ExternalLink size={16} />
-                Live Demo
-              </motion.a>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Content */}
-      <div className="p-6">
-        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">
-          {project.title}
-        </h3>
-        <p className="text-slate-400 text-sm leading-relaxed mb-4">
-          {project.description}
-        </p>
-
-        {/* Tech tags */}
-        <div className="flex flex-wrap gap-2">
-          {project.tech.map((t) => (
-            <span
-              key={t}
-              className="px-2.5 py-1 rounded-full text-xs font-medium"
-              style={{
-                background: `${project.color}15`,
-                color: project.color,
-                border: `1px solid ${project.color}30`,
-              }}
-            >
-              {t}
-            </span>
-          ))}
+        {/* Links */}
+        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <motion.a
+            href={project.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.1 }}
+            className="w-8 h-8 rounded-full flex items-center justify-center"
+            style={{ background: 'rgba(201,162,39,0.08)', border: '1px solid rgba(201,162,39,0.2)', color: '#c9a227' }}
+          >
+            <Github size={14} />
+          </motion.a>
+          <motion.a
+            href={project.live}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.1 }}
+            className="w-8 h-8 rounded-full flex items-center justify-center"
+            style={{ background: 'rgba(176,190,197,0.08)', border: '1px solid rgba(176,190,197,0.2)', color: '#b0bec5' }}
+          >
+            <ExternalLink size={14} />
+          </motion.a>
         </div>
       </div>
-    </motion.div>
-  );
-};
+
+      {/* Description */}
+      <p className="text-sm leading-relaxed mb-5" style={{ color: '#607d8b', fontFamily: 'Rajdhani, sans-serif', fontWeight: 400 }}>
+        {project.description}
+      </p>
+
+      {/* Tech stack */}
+      <div className="flex flex-wrap gap-2">
+        {project.tech.map((t) => (
+          <span
+            key={t}
+            className="text-[11px] px-2.5 py-1 rounded-full font-medium"
+            style={{
+              background: 'rgba(201,162,39,0.06)',
+              border: '1px solid rgba(201,162,39,0.15)',
+              color: '#90a4ae',
+              fontFamily: 'JetBrains Mono, monospace',
+            }}
+          >
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    {/* Hover glow */}
+    <div
+      className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+      style={{ boxShadow: `inset 0 0 40px rgba(201,162,39,0.04)` }}
+    />
+  </motion.div>
+);
 
 const Projects = () => {
-  const [filter, setFilter] = useState('All');
-
-  const filtered = filter === 'All'
-    ? projects
-    : projects.filter(p => p.category === filter);
+  const [activeFilter, setActiveFilter] = useState('All');
+  const filtered = activeFilter === 'All' ? projects : projects.filter(p => p.category === activeFilter);
 
   return (
     <section id="projects" className="section-padding">
       <div className="w-full">
         <SectionTitle title="My Projects" subtitle="// what I've built" />
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap gap-3 justify-center mb-10">
+        {/* Filter tabs */}
+        <div className="flex flex-wrap gap-3 justify-center mb-12">
           {categories.map(cat => (
             <motion.button
               key={cat}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setFilter(cat)}
-              className="px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300"
+              onClick={() => setActiveFilter(cat)}
+              className="px-5 py-2 rounded-full text-sm font-bold tracking-wider transition-all duration-300"
               style={{
-                background: filter === cat
-                  ? 'linear-gradient(135deg, #6366f1, #8b5cf6)'
-                  : 'rgba(255,255,255,0.03)',
-                border: `1px solid ${filter === cat ? 'transparent' : 'rgba(255,255,255,0.08)'}`,
-                color: filter === cat ? 'white' : '#94a3b8',
-                boxShadow: filter === cat ? '0 0 20px rgba(99,102,241,0.3)' : 'none',
+                fontFamily: 'Cinzel, serif',
+                background: activeFilter === cat ? 'rgba(201,162,39,0.12)' : 'transparent',
+                border: `1px solid ${activeFilter === cat ? 'rgba(201,162,39,0.4)' : 'rgba(176,190,197,0.1)'}`,
+                color: activeFilter === cat ? '#c9a227' : '#607d8b',
+                letterSpacing: '0.06em',
               }}
             >
               {cat}
@@ -244,44 +204,37 @@ const Projects = () => {
           ))}
         </div>
 
-        {/* Projects Grid */}
+        {/* Grid */}
         <motion.div
           layout
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence>
             {filtered.map((project, i) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ProjectCard project={project} index={i} />
-              </motion.div>
+              <ProjectCard key={project.id} project={project} index={i} />
             ))}
           </AnimatePresence>
         </motion.div>
 
-        {/* View More */}
+        {/* GitHub CTA */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mt-12"
+          className="text-center mt-14"
         >
+          <p className="mb-4 text-sm tracking-widest uppercase" style={{ color: '#455a64', fontFamily: 'JetBrains Mono, monospace' }}>
+            Want to see more?
+          </p>
           <motion.a
-            href="https://github.com/sudeshhansika"
+            href="https://github.com/Sudesh-2002"
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="btn-outline inline-flex items-center gap-2 px-8 py-3 rounded-full text-white font-semibold"
+            className="btn-silver inline-flex items-center gap-2 px-8 py-3 rounded-full text-sm font-semibold"
           >
-            <GitFork size={18} />
-            View All on GitHub
+            <Github size={16} /> View All on GitHub
           </motion.a>
         </motion.div>
       </div>
