@@ -1,305 +1,446 @@
-import React, { useRef, Suspense } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
-import { GitFork, Link2 as Linkedin, Mail, Download, ArrowDown, Share2 as Twitter } from 'lucide-react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { MeshDistortMaterial, Sphere, Torus, Box, Float } from '@react-three/drei';
-import * as THREE from 'three';
+import {
+  Mail, Download, ArrowRight,
+  Code2, Server, Database, Globe, Layers, Cpu,
+  ChevronRight, Terminal, Braces, GitBranch
+} from 'lucide-react';
 
-// 3D floating orb
-function GoldOrb() {
-  const meshRef = useRef();
-  useFrame(({ clock }) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x = clock.getElapsedTime() * 0.3;
-      meshRef.current.rotation.y = clock.getElapsedTime() * 0.5;
-    }
-  });
-  return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={1.5}>
-      <Sphere ref={meshRef} args={[1.3, 64, 64]}>
-        <MeshDistortMaterial
-          color="#c9a227"
-          attach="material"
-          distort={0.35}
-          speed={2}
-          roughness={0.1}
-          metalness={0.9}
-          wireframe={false}
-        />
-      </Sphere>
-    </Float>
-  );
+// ── animated background canvas (grid + glow orbs) ──────────────────────────
+function HeroBg() {
+  const canvasRef = useRef(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+    const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
+    window.addEventListener('resize', resize);
+
+    // grid dots
+    const draw = () => {
+      ctx.clearRect(0, 0, w, h);
+      const spacing = 48;
+      ctx.fillStyle = 'rgba(124,58,237,0.12)';
+      for (let x = 0; x < w; x += spacing) {
+        for (let y = 0; y < h; y += spacing) {
+          ctx.beginPath();
+          ctx.arc(x, y, 1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    };
+    draw();
+    window.addEventListener('resize', draw);
+    return () => { window.removeEventListener('resize', resize); window.removeEventListener('resize', draw); };
+  }, []);
+  return <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }} />;
 }
 
-function SilverTorus() {
-  const ref = useRef();
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.rotation.x = clock.getElapsedTime() * 0.4;
-      ref.current.rotation.z = clock.getElapsedTime() * 0.2;
-    }
-  });
-  return (
-    <Float speed={1.5} rotationIntensity={1} floatIntensity={0.8}>
-      <Torus ref={ref} args={[2.2, 0.06, 16, 80]}>
-        <meshStandardMaterial
-          color="#b0bec5"
-          metalness={1}
-          roughness={0.1}
-          emissive="#607d8b"
-          emissiveIntensity={0.3}
-        />
-      </Torus>
-    </Float>
-  );
-}
+// ── Tech pill ───────────────────────────────────────────────────────────────
+const skills = [
+  { label: 'React',       color: '#61dafb', Icon: Code2 },
+  { label: 'Node.js',     color: '#68a063', Icon: Server },
+  { label: 'TypeScript',  color: '#3178c6', Icon: Braces },
+  { label: 'MongoDB',     color: '#47a248', Icon: Database },
+  { label: 'PostgreSQL',  color: '#336791', Icon: Database },
+  { label: 'Next.js',     color: '#e2e8f0', Icon: Globe },
+  { label: 'Docker',      color: '#2496ed', Icon: Layers },
+  { label: 'AWS',         color: '#ff9900', Icon: Cpu },
+  { label: 'GraphQL',     color: '#e535ab', Icon: GitBranch },
+];
 
-function GoldRing() {
-  const ref = useRef();
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.rotation.y = clock.getElapsedTime() * -0.3;
-      ref.current.rotation.x = Math.PI / 3 + Math.sin(clock.getElapsedTime() * 0.5) * 0.2;
-    }
-  });
-  return (
-    <Torus ref={ref} args={[1.8, 0.04, 16, 80]}>
-      <meshStandardMaterial
-        color="#e8c547"
-        metalness={1}
-        roughness={0.05}
-        emissive="#c9a227"
-        emissiveIntensity={0.4}
-      />
-    </Torus>
-  );
-}
+// ── Terminal block lines ────────────────────────────────────────────────────
+const termLines = [
+  { txt: '$ whoami',                    color: '#4ade80', delay: 0 },
+  { txt: 'sudesh_hansika',              color: '#e2e8f0', delay: 0.4 },
+  { txt: '$ cat role.txt',             color: '#4ade80', delay: 0.9 },
+  { txt: 'Full Stack Engineer',         color: '#7c3aed', delay: 1.3 },
+  { txt: '$ git log --oneline -1',     color: '#4ade80', delay: 1.8 },
+  { txt: 'a1b2c3 ✨ shipping magic',   color: '#06b6d4', delay: 2.2 },
+  { txt: '$ _',                         color: '#4ade80', delay: 2.7, blink: true },
+];
 
-function Scene3D() {
-  return (
-    <>
-      <ambientLight intensity={0.3} />
-      <directionalLight position={[5, 5, 5]} intensity={1.5} color="#e8c547" />
-      <directionalLight position={[-5, -5, 5]} intensity={0.8} color="#b0bec5" />
-      <pointLight position={[0, 0, 3]} intensity={2} color="#c9a227" distance={8} />
-      <GoldOrb />
-      <SilverTorus />
-      <GoldRing />
-    </>
-  );
-}
-
+// ── Main Hero ───────────────────────────────────────────────────────────────
 const Hero = () => {
+  const [showLines, setShowLines] = useState([]);
+
+  useEffect(() => {
+    termLines.forEach((line, i) => {
+      setTimeout(() => setShowLines(prev => [...prev, i]), line.delay * 1000 + 800);
+    });
+  }, []);
+
   return (
-    <section id="home" className="section-padding relative min-h-screen flex items-center overflow-hidden">
-      {/* Background decorative blobs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-[600px] h-[600px] rounded-full opacity-[0.04] blur-[120px]"
-          style={{ background: 'radial-gradient(circle, #c9a227, #8b6914)', top: '-150px', left: '-150px' }} />
-        <div className="absolute w-[400px] h-[400px] rounded-full opacity-[0.03] blur-[100px]"
-          style={{ background: 'radial-gradient(circle, #b0bec5, #607d8b)', bottom: '0px', right: '-100px' }} />
-        {/* Horizontal lines decorations */}
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="absolute left-0 right-0 h-px opacity-5"
-            style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)', top: `${15 + i * 20}%` }}
-          />
-        ))}
+    <section id="home" style={{
+      position: 'relative',
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      overflow: 'hidden',
+      background: 'linear-gradient(135deg, #04041a 0%, #06061f 40%, #080820 100%)',
+      padding: '0 5%',
+    }}>
+      <HeroBg />
+
+      {/* ── Gradient orbs ── */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <div style={{
+          position: 'absolute', width: '700px', height: '700px', borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%)',
+          top: '-200px', left: '-200px', filter: 'blur(40px)',
+        }} />
+        <div style={{
+          position: 'absolute', width: '500px', height: '500px', borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(6,182,212,0.14) 0%, transparent 70%)',
+          bottom: '-100px', right: '-100px', filter: 'blur(40px)',
+        }} />
+        <div style={{
+          position: 'absolute', width: '350px', height: '350px', borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%)',
+          top: '40%', right: '20%', filter: 'blur(60px)',
+        }} />
       </div>
 
-      <div className="relative z-10 w-full pt-28 pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
+      {/* ── Content ── */}
+      <div className="hero-grid" style={{
+        position: 'relative', zIndex: 1, width: '100%',
+        paddingTop: '90px', paddingBottom: '60px',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '48px',
+        alignItems: 'center',
+      }}>
 
-          {/* LEFT COLUMN */}
+        {/* ── LEFT ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+          {/* Status badge */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.85, ease: 'easeOut' }}
-            className="flex flex-col gap-5 order-2 md:order-1"
+            initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              padding: '6px 14px', borderRadius: '100px', width: 'fit-content',
+              background: 'rgba(74,222,128,0.08)',
+              border: '1px solid rgba(74,222,128,0.25)',
+            }}
           >
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full w-fit text-sm font-semibold"
-              style={{
-                background: 'rgba(201,162,39,0.08)',
-                border: '1px solid rgba(201,162,39,0.3)',
-                color: '#c9a227',
-                fontFamily: 'JetBrains Mono, monospace',
-                letterSpacing: '0.05em',
-                fontSize: '12px',
-              }}
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Available for Work
-            </motion.div>
-
-            {/* Greeting */}
-            <div>
-              <motion.p
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-                className="text-sm font-medium mb-2 tracking-widest uppercase"
-                style={{ color: '#607d8b', fontFamily: 'JetBrains Mono, monospace' }}
-              >// Hello, I'm</motion.p>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-                className="font-black leading-[1.05] mb-2"
-                style={{ fontSize: 'clamp(2.8rem, 5vw, 4.2rem)' }}
-              >
-                <span className="gradient-text-gold">Sudesh</span><br />
-                <span className="gradient-text-silver">Hansika</span>
-              </motion.h1>
-            </div>
-
-            {/* Typing role */}
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}
-              className="text-lg font-bold h-8"
-              style={{ color: '#b0bec5', fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.1em' }}
-            >
-              <TypeAnimation
-                sequence={['Software Engineer', 2000, 'Full Stack Developer', 2000, 'React Specialist', 2000, 'Backend Architect', 2000]}
-                wrapper="span" speed={50} repeat={Infinity}
-              />
-            </motion.div>
-
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}
-              className="leading-relaxed max-w-md"
-              style={{ color: '#78909c', fontSize: '15px', fontFamily: 'Rajdhani, sans-serif', fontWeight: 400 }}
-            >
-              Crafting exceptional digital experiences with precision and elegance.
-              Passionate about clean architecture, stunning UI, and scalable solutions.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85 }}
-              className="flex flex-wrap gap-3"
-            >
-              <motion.a href="#projects" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                className="btn-gold flex items-center gap-2 px-7 py-3 rounded-full text-sm">
-                View Work <ArrowDown size={14} />
-              </motion.a>
-              <motion.a href="/resume.pdf" download whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                className="btn-silver flex items-center gap-2 px-7 py-3 rounded-full text-sm font-semibold">
-                <Download size={14} /> Download CV
-              </motion.a>
-            </motion.div>
-
-            {/* Social icons */}
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}
-              className="flex items-center gap-3"
-            >
-              {[
-                { icon: GitFork, href: 'https://github.com/Sudesh-2002', label: 'GitHub' },
-                { icon: Linkedin, href: 'https://linkedin.com/in/sudeshhansika', label: 'LinkedIn' },
-                { icon: Twitter, href: 'https://twitter.com/sudeshhansika', label: 'Twitter' },
-                { icon: Mail, href: 'mailto:sudeshhansika@gmail.com', label: 'Email' },
-              ].map(({ icon: Icon, href, label }) => (
-                <motion.a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                  whileHover={{ scale: 1.2, y: -3 }}
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200"
-                  style={{
-                    background: 'rgba(201,162,39,0.06)',
-                    border: '1px solid rgba(201,162,39,0.2)',
-                    color: '#90a4ae',
-                  }}
-                  title={label}
-                >
-                  <Icon size={16} />
-                </motion.a>
-              ))}
-            </motion.div>
-
-            {/* Stats row */}
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.15 }}
-              className="flex gap-8 pt-4"
-              style={{ borderTop: '1px solid rgba(201,162,39,0.1)' }}
-            >
-              {[
-                { label: 'Years Experience', value: '3+' },
-                { label: 'Projects Done', value: '20+' },
-                { label: 'Happy Clients', value: '15+' },
-              ].map(({ label, value }) => (
-                <div key={label}>
-                  <p className="text-2xl font-black gradient-text-gold">{value}</p>
-                  <p className="text-[11px] mt-0.5 tracking-wider uppercase" style={{ color: '#455a64', fontFamily: 'JetBrains Mono, monospace' }}>{label}</p>
-                </div>
-              ))}
-            </motion.div>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 10px #4ade80', animation: 'heroPulse 2s infinite' }} />
+            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', color: '#4ade80', letterSpacing: '0.12em' }}>
+              AVAILABLE FOR OPPORTUNITIES
+            </span>
           </motion.div>
 
-          {/* RIGHT COLUMN — 3D Scene */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.3 }}
-            className="relative flex items-center justify-center order-1 md:order-2"
-            style={{ height: '460px' }}
-          >
-            {/* 3D Canvas */}
-            <div className="absolute inset-0 rounded-full overflow-hidden" style={{ zIndex: 1 }}>
-              <Canvas camera={{ position: [0, 0, 5], fov: 60 }}>
-                <Suspense fallback={null}>
-                  <Scene3D />
-                </Suspense>
-              </Canvas>
+          {/* Main heading */}
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+            <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '13px', color: '#7c3aed', letterSpacing: '0.1em', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Terminal size={13} /> <span>// hello world</span>
             </div>
+            <h1 style={{ margin: 0, lineHeight: 1.05, fontFamily: 'Inter, sans-serif' }}>
+              <span style={{
+                display: 'block',
+                fontSize: 'clamp(2.6rem, 5.5vw, 4.4rem)',
+                fontWeight: 800,
+                color: '#e2e8f0',
+                letterSpacing: '-0.02em',
+              }}>
+                Sudesh
+              </span>
+              <span style={{
+                display: 'block',
+                fontSize: 'clamp(2.6rem, 5.5vw, 4.4rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                background: 'linear-gradient(90deg, #7c3aed, #06b6d4, #7c3aed)',
+                backgroundSize: '200% auto',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                animation: 'heroGradientShift 4s linear infinite',
+              }}>
+                Hansika
+              </span>
+            </h1>
+          </motion.div>
 
-            {/* Profile image overlaid in center */}
-            <motion.div
-              animate={{ y: [-8, 8, -8] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative z-10 rounded-full overflow-hidden"
-              style={{
-                width: '185px', height: '185px',
-                border: '2px solid rgba(201,162,39,0.6)',
-                boxShadow: '0 0 40px rgba(201,162,39,0.3), 0 0 80px rgba(201,162,39,0.1), inset 0 0 40px rgba(201,162,39,0.05)',
-              }}
-            >
-              <img src="/profile.png" alt="Sudesh Hansika" className="w-full h-full object-cover" />
-              {/* Gold overlay tint */}
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(201,162,39,0.15), transparent)', mixBlendMode: 'overlay' }} />
-            </motion.div>
+          {/* Role typing */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}
+            style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
+          >
+            <div style={{
+              padding: '4px 10px', borderRadius: '6px',
+              background: 'rgba(124,58,237,0.15)',
+              border: '1px solid rgba(124,58,237,0.3)',
+              fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', color: '#7c3aed',
+            }}>
+              {'<dev>'}
+            </div>
+            <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 'clamp(14px, 2vw, 18px)', fontWeight: 600, color: '#94a3b8' }}>
+              <TypeAnimation
+                sequence={[
+                  'Full Stack Engineer', 2200,
+                  'React & Node.js Dev', 2200,
+                  'Cloud & DevOps Enthusiast', 2200,
+                  'API Architect', 2200,
+                  'UI/UX Craftsman', 2200,
+                ]}
+                wrapper="span" speed={55} repeat={Infinity}
+              />
+            </span>
+          </motion.div>
 
-            {/* Floating tech badges */}
-            {[
-              { label: 'React', color: '#61dafb', top: '8%', left: '60%' },
-              { label: 'Node.js', color: '#68a063', top: '25%', right: '2%' },
-              { label: 'TypeScript', color: '#b0bec5', bottom: '22%', right: '0%' },
-              { label: 'Python', color: '#e8c547', bottom: '8%', left: '54%' },
-              { label: 'MongoDB', color: '#c9a227', top: '30%', left: '0%' },
-            ].map(({ label, color, ...pos }) => (
+          {/* Description */}
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+            style={{
+              fontFamily: 'Inter, sans-serif', fontSize: '15px', lineHeight: 1.8,
+              color: '#64748b', maxWidth: '480px', margin: 0,
+            }}
+          >
+            I build <span style={{ color: '#e2e8f0', fontWeight: 600 }}>production-grade</span> applications from
+            database schema to pixel-perfect UI. Obsessed with clean code, great DX, and
+            shipping <span style={{ color: '#7c3aed', fontWeight: 600 }}>things that matter</span>.
+          </motion.p>
+
+          {/* Skill pills */}
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.75 }}
+            style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}
+          >
+            {skills.map(({ label, color, Icon }, i) => (
               <motion.div
                 key={label}
-                animate={{ y: [-4, 4, -4] }}
-                transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, ease: 'easeInOut', delay: Math.random() * 2 }}
-                className="absolute glass-card px-3 py-1.5 rounded-full text-xs font-bold z-20"
+                whileHover={{ scale: 1.08, y: -2 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 + i * 0.06 }}
                 style={{
-                  color,
+                  display: 'flex', alignItems: 'center', gap: '5px',
+                  padding: '5px 12px', borderRadius: '100px',
+                  background: `${color}10`,
                   border: `1px solid ${color}30`,
-                  boxShadow: `0 0 12px ${color}20`,
-                  fontFamily: 'JetBrains Mono, monospace',
-                  ...pos,
+                  cursor: 'default',
                 }}
               >
-                {label}
+                <Icon size={11} color={color} />
+                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', color, fontWeight: 500 }}>
+                  {label}
+                </span>
               </motion.div>
             ))}
+          </motion.div>
 
-            {/* Corner decorations */}
-            <div className="absolute top-4 left-4 w-8 h-8 z-20" style={{ borderTop: '2px solid rgba(201,162,39,0.5)', borderLeft: '2px solid rgba(201,162,39,0.5)' }} />
-            <div className="absolute bottom-4 right-4 w-8 h-8 z-20" style={{ borderBottom: '2px solid rgba(201,162,39,0.5)', borderRight: '2px solid rgba(201,162,39,0.5)' }} />
+          {/* CTAs */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0 }}
+            style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}
+          >
+            <motion.a href="#projects"
+              whileHover={{ scale: 1.04, boxShadow: '0 0 30px rgba(124,58,237,0.6), 0 0 60px rgba(6,182,212,0.2)' }}
+              whileTap={{ scale: 0.96 }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                padding: '13px 28px', borderRadius: '10px',
+                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                color: '#fff', textDecoration: 'none',
+                fontFamily: 'Inter, sans-serif', fontSize: '14px', fontWeight: 600,
+                boxShadow: '0 0 20px rgba(124,58,237,0.3)',
+                letterSpacing: '0.03em', position: 'relative', overflow: 'hidden',
+              }}
+            >
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(255,255,255,0.12), transparent)' }} />
+              <span style={{ position: 'relative', zIndex: 1 }}>View My Work</span>
+              <ArrowRight size={15} style={{ position: 'relative', zIndex: 1 }} />
+            </motion.a>
+
+            <motion.a href="/resume.pdf" download
+              whileHover={{ scale: 1.04, borderColor: 'rgba(124,58,237,0.6)', background: 'rgba(124,58,237,0.08)' }}
+              whileTap={{ scale: 0.96 }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                padding: '13px 28px', borderRadius: '10px',
+                background: 'transparent',
+                border: '1px solid rgba(124,58,237,0.3)',
+                color: '#e2e8f0', textDecoration: 'none',
+                fontFamily: 'Inter, sans-serif', fontSize: '14px', fontWeight: 600,
+                letterSpacing: '0.03em', transition: 'all 0.3s ease',
+              }}
+            >
+              <Download size={15} /> Resume
+            </motion.a>
+          </motion.div>
+
+          {/* Social links + stats */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.15 }}
+            style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}
+          >
+            {/* Socials */}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {/* GitHub */}
+              <motion.a href="https://github.com/Sudesh-2002" target="_blank" rel="noopener noreferrer"
+                whileHover={{ scale: 1.2, y: -3 }} title="GitHub"
+                style={{ width: '38px', height: '38px', borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', color: '#7c3aed', textDecoration: 'none' }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              </motion.a>
+              {/* LinkedIn */}
+              <motion.a href="https://linkedin.com/in/sudeshhansika" target="_blank" rel="noopener noreferrer"
+                whileHover={{ scale: 1.2, y: -3 }} title="LinkedIn"
+                style={{ width: '38px', height: '38px', borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', color: '#7c3aed', textDecoration: 'none' }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </motion.a>
+              {/* Email */}
+              <motion.a href="mailto:sudeshhansika@gmail.com"
+                whileHover={{ scale: 1.2, y: -3 }} title="Email"
+                style={{ width: '38px', height: '38px', borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)', color: '#7c3aed', textDecoration: 'none' }}
+              >
+                <Mail size={16} />
+              </motion.a>
+            </div>
+
+            <div style={{ width: '1px', height: '28px', background: 'rgba(124,58,237,0.2)' }} />
+
+            {/* Stats */}
+            {[
+              { val: '3+', lbl: 'Years' },
+              { val: '20+', lbl: 'Projects' },
+              { val: '15+', lbl: 'Clients' },
+            ].map(({ val, lbl }) => (
+              <div key={lbl} style={{ textAlign: 'center' }}>
+                <div style={{
+                  fontFamily: 'Inter, sans-serif', fontSize: '18px', fontWeight: 800,
+                  background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                }}>{val}</div>
+                <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#334155', letterSpacing: '0.1em', marginTop: '2px' }}>{lbl}</div>
+              </div>
+            ))}
           </motion.div>
         </div>
+
+        {/* ── RIGHT ── */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, delay: 0.3 }}
+          style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'stretch' }}
+        >
+          {/* Terminal card */}
+          <div style={{
+            background: 'rgba(4,4,20,0.9)',
+            border: '1px solid rgba(124,58,237,0.25)',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            boxShadow: '0 0 60px rgba(124,58,237,0.12), 0 20px 60px rgba(0,0,0,0.5)',
+          }}>
+            {/* Terminal top bar */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
+              padding: '12px 16px',
+              background: 'rgba(124,58,237,0.08)',
+              borderBottom: '1px solid rgba(124,58,237,0.15)',
+            }}>
+              {['#ef4444', '#f59e0b', '#22c55e'].map(c => (
+                <div key={c} style={{ width: '11px', height: '11px', borderRadius: '50%', background: c }} />
+              ))}
+              <span style={{
+                marginLeft: '8px', fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '11px', color: '#334155', letterSpacing: '0.08em',
+              }}>
+                sudesh@portfolio ~ zsh
+              </span>
+              <div style={{ marginLeft: 'auto' }}>
+                <Terminal size={13} color="#334155" />
+              </div>
+            </div>
+            {/* Terminal body */}
+            <div style={{ padding: '20px 22px', minHeight: '200px', fontFamily: 'JetBrains Mono, monospace', fontSize: '13px', lineHeight: 2 }}>
+              <AnimatePresence>
+                {termLines.map((line, i) =>
+                  showLines.includes(i) && (
+                    <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '6px', color: line.color }}
+                    >
+                      <ChevronRight size={11} style={{ flexShrink: 0, opacity: 0.6 }} />
+                      <span>{line.txt}</span>
+                      {line.blink && <span style={{ animation: 'termBlink 1s infinite' }}>▋</span>}
+                    </motion.div>
+                  )
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Stack cards row */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            {[
+              { icon: Code2,   label: 'Frontend', desc: 'React · Next.js · TypeScript', color: '#61dafb' },
+              { icon: Server,  label: 'Backend',  desc: 'Node.js · Express · FastAPI',  color: '#68a063' },
+              { icon: Database,label: 'Database', desc: 'PostgreSQL · MongoDB · Redis', color: '#f59e0b' },
+              { icon: Globe,   label: 'DevOps',   desc: 'Docker · AWS · CI/CD',         color: '#06b6d4' },
+            ].map(({ icon: Icon, label, desc, color }) => (
+              <motion.div key={label}
+                whileHover={{ scale: 1.04, y: -4 }}
+                style={{
+                  padding: '16px',
+                  background: 'rgba(4,4,20,0.8)',
+                  border: '1px solid rgba(124,58,237,0.15)',
+                  borderRadius: '12px',
+                  cursor: 'default',
+                  transition: 'border-color 0.2s',
+                }}
+              >
+                <div style={{
+                  width: '36px', height: '36px', borderRadius: '8px',
+                  background: `${color}15`, border: `1px solid ${color}30`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  marginBottom: '10px',
+                }}>
+                  <Icon size={16} color={color} />
+                </div>
+                <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '12px', fontWeight: 700, color: '#e2e8f0', marginBottom: '3px' }}>{label}</div>
+                <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#334155', lineHeight: 1.6 }}>{desc}</div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* GitHub activity bar (decorative) */}
+          <div style={{
+            padding: '14px 18px',
+            background: 'rgba(4,4,20,0.8)',
+            border: '1px solid rgba(124,58,237,0.15)',
+            borderRadius: '12px',
+            display: 'flex', alignItems: 'center', gap: '12px',
+          }}>
+            <GitBranch size={14} color="#7c3aed" />
+            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', color: '#334155' }}>latest commit:</span>
+            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', color: '#06b6d4', flex: 1 }}>
+              feat: portfolio v2 🚀
+            </span>
+            <div style={{
+              padding: '2px 8px', borderRadius: '4px',
+              background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.2)',
+              fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#4ade80',
+            }}>
+              main
+            </div>
+          </div>
+        </motion.div>
       </div>
+
+      {/* ── CSS Keyframes via style tag ── */}
+      <style>{`
+        @keyframes heroPulse {
+          0%, 100% { opacity: 1; box-shadow: 0 0 8px #4ade80; }
+          50% { opacity: 0.5; box-shadow: 0 0 20px #4ade80; }
+        }
+        @keyframes heroGradientShift {
+          0% { background-position: 0% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes termBlink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+      `}</style>
     </section>
   );
 };
