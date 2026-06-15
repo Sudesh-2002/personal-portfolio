@@ -1,64 +1,72 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GitFork as Github, Link2 as Linkedin, Share2 as Twitter, Mail, Heart } from 'lucide-react';
+import { Terminal, Heart } from 'lucide-react';
 
-const Footer = () => (
-  <footer
-    className="relative py-12 px-8"
-    style={{ borderTop: '1px solid rgba(201,162,39,0.1)', background: 'rgba(3,7,18,0.8)' }}
-  >
-    {/* Top gold line */}
-    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(201,162,39,0.4), transparent)' }} />
+const links = [
+  { label: 'Home',       href: '#home' },
+  { label: 'About',      href: '#about' },
+  { label: 'Projects',   href: '#projects' },
+  { label: 'Contact',    href: '#contact' },
+];
 
-    <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-      {/* Logo */}
-      <motion.a href="#home" whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
-        <div
-          className="w-9 h-9 rounded-full flex items-center justify-center"
-          style={{ background: 'linear-gradient(135deg, #c9a227, #8b6914)', boxShadow: '0 0 16px rgba(201,162,39,0.3)' }}
-        >
-          <span style={{ fontFamily: 'Cinzel, serif', fontWeight: 900, fontSize: '15px', color: '#030712' }}>S</span>
-        </div>
-        <div>
-          <p style={{ fontFamily: 'Cinzel, serif', color: '#c9a227', fontWeight: 700, fontSize: '13px', letterSpacing: '0.1em' }}>SUDESH HANSIKA</p>
-          <p style={{ fontFamily: 'JetBrains Mono, monospace', color: '#455a64', fontSize: '10px', letterSpacing: '0.05em' }}>Software Engineer</p>
-        </div>
-      </motion.a>
+export default function Footer() {
+  return (
+    <footer style={{
+      position: 'relative',
+      borderTop: '1px solid rgba(0,245,255,0.08)',
+      background: 'rgba(5,10,15,0.9)',
+      padding: '48px 5%',
+    }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,245,255,0.4), rgba(123,47,255,0.4), transparent)' }} />
 
-      {/* Center */}
-      <p className="text-xs text-center" style={{ color: '#455a64', fontFamily: 'JetBrains Mono, monospace' }}>
-        Built with <Heart size={10} style={{ display: 'inline', color: '#c9a227' }} /> using React & Three.js
-        <br />
-        <span style={{ color: '#37474f' }}>© {new Date().getFullYear()} Sudesh Hansika. All rights reserved.</span>
-      </p>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '28px', alignItems: 'center' }}>
 
-      {/* Socials */}
-      <div className="flex gap-3">
-        {[
-          { icon: Github, href: 'https://github.com/Sudesh-2002' },
-          { icon: Linkedin, href: 'https://linkedin.com/in/sudeshhansika' },
-          { icon: Twitter, href: 'https://twitter.com/sudeshhansika' },
-          { icon: Mail, href: 'mailto:sudeshhansika@gmail.com' },
-        ].map(({ icon: Icon, href }, i) => (
-          <motion.a
-            key={i}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.15, y: -2 }}
-            className="w-9 h-9 rounded-full flex items-center justify-center"
-            style={{
-              background: 'rgba(201,162,39,0.06)',
-              border: '1px solid rgba(201,162,39,0.15)',
-              color: '#607d8b',
+        {/* Logo */}
+        <motion.a href="#home" whileHover={{ scale: 1.04 }} style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+          <div style={{ width: '36px', height: '36px', borderRadius: '9px', background: 'linear-gradient(135deg, #00F5FF, #7B2FFF)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(0,245,255,0.3)' }}>
+            <Terminal size={16} color="#050A0F" />
+          </div>
+          <div>
+            <div style={{ fontFamily: 'Space Grotesk', fontSize: '14px', fontWeight: 700, color: '#fff' }}>
+              <span style={{ color: '#00F5FF' }}>&lt;</span>Sudesh<span style={{ color: '#7B2FFF' }}> /&gt;</span>
+            </div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: '9px', color: '#00E676', letterSpacing: '0.14em' }}>AI · FULLSTACK</div>
+          </div>
+        </motion.a>
+
+        {/* Nav links */}
+        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {links.map(({ label, href }) => (
+            <a key={label} href={href} style={{
+              padding: '6px 14px', borderRadius: '8px',
+              fontFamily: 'Inter', fontSize: '13px', fontWeight: 500,
+              color: 'var(--text-muted)', textDecoration: 'none',
+              transition: 'color 0.2s, background 0.2s',
             }}
-          >
-            <Icon size={15} />
-          </motion.a>
-        ))}
-      </div>
-    </div>
-  </footer>
-);
+              onMouseEnter={e => { e.target.style.color = 'var(--cyan)'; e.target.style.background = 'rgba(0,245,255,0.06)'; }}
+              onMouseLeave={e => { e.target.style.color = 'var(--text-muted)'; e.target.style.background = 'transparent'; }}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
 
-export default Footer;
+        {/* Divider */}
+        <div style={{ width: '100%', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,245,255,0.1), transparent)' }} />
+
+        {/* Bottom row */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+          <p style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: 'var(--text-dim)', letterSpacing: '0.08em' }}>
+            © {new Date().getFullYear()} Sudesh Hansika. Built with{' '}
+            <Heart size={10} style={{ display: 'inline', color: '#7B2FFF', verticalAlign: 'middle' }} />{' '}
+            using React + Framer Motion.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00E676', boxShadow: '0 0 8px #00E676' }} />
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: '#00E676', letterSpacing: '0.1em' }}>Open to work</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

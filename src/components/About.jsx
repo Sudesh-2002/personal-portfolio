@@ -1,208 +1,187 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Code2, Globe, Cpu, Zap } from 'lucide-react';
 
-export const SectionTitle = ({ title, subtitle }) => (
-  <div className="text-center mb-16">
-    <motion.p
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      className="text-xs font-medium mb-3 tracking-widest uppercase"
-      style={{ color: '#c9a227', fontFamily: 'JetBrains Mono, monospace' }}
-    >
-      {subtitle}
-    </motion.p>
-    <motion.h2
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 }}
-      className="text-4xl md:text-5xl font-black gradient-text-silver"
-    >
-      {title}
-    </motion.h2>
-    <motion.div
-      initial={{ width: 0 }}
-      whileInView={{ width: '80px' }}
-      transition={{ delay: 0.3, duration: 0.6 }}
-      className="h-px mx-auto mt-5 rounded-full"
-      style={{ background: 'linear-gradient(90deg, transparent, #c9a227, transparent)' }}
-    />
-  </div>
-);
+/* ─── Reusable Section Title ──────────────────────────────────── */
+export function SectionTitle({ label, title, titleAccent }) {
+  return (
+    <div style={{ marginBottom: '64px' }}>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }} transition={{ duration: 0.5 }}
+        className="section-label" style={{ marginBottom: '16px' }}>
+        {label}
+      </motion.div>
+      <motion.h2
+        initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.6 }}
+        style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 'clamp(2rem,5vw,3.2rem)', lineHeight: 1.1 }}>
+        {title}{' '}
+        {titleAccent && <span className="grad-cyan">{titleAccent}</span>}
+      </motion.h2>
+    </div>
+  );
+}
 
-const About = () => {
+/* ─── Animated JSON terminal ──────────────────────────────────── */
+const jsonLines = [
+  { txt: '{',                                                             indent: 0, color: '#E8EDF2' },
+  { txt: '"name":',          val: '"Sudesh"',                            indent: 1, color: '#7B2FFF', vc: '#00F5FF' },
+  { txt: '"year":',          val: '"Final Year, CS"',                    indent: 1, color: '#7B2FFF', vc: '#FF9500' },
+  { txt: '"based_in":',      val: '"Sri Lanka 🇱🇰"',                     indent: 1, color: '#7B2FFF', vc: '#00E676' },
+  { txt: '"role":',          val: null,                                   indent: 1, color: '#7B2FFF' },
+  { txt: '  "Full Stack Engineer",',                                      indent: 2, color: '#00F5FF' },
+  { txt: '  "AI/ML Engineer"',                                            indent: 2, color: '#00F5FF' },
+  { txt: '],',                                                            indent: 1, color: '#E8EDF2' },
+  { txt: '"currently_building":',  val: null,                            indent: 1, color: '#7B2FFF' },
+  { txt: '  "AI Code Review Agent",',                                     indent: 2, color: '#A87AFF' },
+  { txt: '  "Outfit Perception AI",',                                     indent: 2, color: '#A87AFF' },
+  { txt: '  "Flutter Mood-Music App"',                                    indent: 2, color: '#A87AFF' },
+  { txt: '],',                                                            indent: 1, color: '#E8EDF2' },
+  { txt: '"obsessed_with":',  val: '"Making AI that ships to prod"',      indent: 1, color: '#7B2FFF', vc: '#FF9500' },
+  { txt: '}',                                                             indent: 0, color: '#E8EDF2' },
+];
+
+function JsonTerminal() {
+  const [visible, setVisible] = useState([]);
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-100px' });
+  const inView = useInView(ref, { once: true });
 
-  const highlights = [
-    { icon: Code2, label: 'Clean Code', desc: 'Maintainable, scalable code following SOLID principles' },
-    { icon: Globe, label: 'Full Stack', desc: 'End-to-end development from design to deployment' },
-    { icon: Cpu, label: 'Performance', desc: 'Optimizing apps for speed, SEO and stellar UX' },
-    { icon: Zap, label: 'Passionate', desc: 'Always learning the latest technologies and patterns' },
-  ];
+  useEffect(() => {
+    if (!inView) return;
+    jsonLines.forEach((_, i) => {
+      setTimeout(() => setVisible(v => [...v, i]), i * 90 + 300);
+    });
+  }, [inView]);
 
   return (
-    <section id="about" className="section-padding" ref={ref}>
-      <div className="w-full">
-        <SectionTitle title="About Me" subtitle="// get to know me" />
+    <div ref={ref} className="terminal" style={{ width: '100%' }}>
+      <div className="terminal-bar">
+        <div className="terminal-dot" style={{ background: '#FF5F57' }} />
+        <div className="terminal-dot" style={{ background: '#FEBC2E' }} />
+        <div className="terminal-dot" style={{ background: '#28C840' }} />
+        <span style={{ marginLeft: '10px', fontFamily: 'JetBrains Mono', fontSize: '11px', color: 'var(--text-dim)', letterSpacing: '0.08em' }}>
+          ~/sudesh.json
+        </span>
+      </div>
+      <div style={{ padding: '22px 24px', minHeight: '340px', fontFamily: 'JetBrains Mono', fontSize: '12.5px', lineHeight: 2 }}>
+        {jsonLines.map((line, i) => (
+          <motion.div key={i}
+            initial={{ opacity: 0, x: -8 }} animate={visible.includes(i) ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.25 }}
+            style={{ paddingLeft: `${line.indent * 18}px`, display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            <span style={{ color: line.color }}>{line.txt}</span>
+            {line.val && <span style={{ color: line.vc || '#E8EDF2' }}>{line.val}{i < jsonLines.length - 2 ? ',' : ''}</span>}
+            {line.val === null && line.txt !== '{' && line.txt !== '}' && <span style={{ color: '#E8EDF2' }}>[</span>}
+          </motion.div>
+        ))}
+        <motion.span animate={{ opacity: [1, 0, 1] }} transition={{ duration: 1, repeat: Infinity }}
+          style={{ fontFamily: 'JetBrains Mono', fontSize: '14px', color: 'var(--cyan)' }}>▋</motion.span>
+      </div>
+    </div>
+  );
+}
 
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          {/* Left - Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="relative">
-              {/* Decorative frame */}
-              <div
-                className="absolute -inset-3 rounded-2xl opacity-20"
-                style={{ background: 'linear-gradient(135deg, #c9a227, transparent, #b0bec5)' }}
-              />
-              <div
-                className="w-full max-w-sm mx-auto rounded-2xl overflow-hidden relative"
-                style={{
-                  border: '1px solid rgba(201,162,39,0.25)',
-                  boxShadow: '0 30px 80px rgba(201,162,39,0.12), 0 0 0 1px rgba(201,162,39,0.08)',
-                }}
-              >
-                <img
-                  src="/profile.png"
-                  alt="Sudesh Hansika"
-                  className="w-full object-cover"
-                  style={{ filter: 'brightness(1.05) contrast(1.05) saturate(0.95)' }}
-                />
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{ background: 'linear-gradient(135deg, rgba(201,162,39,0.4), transparent 60%)' }}
-                />
-                {/* Corner accents */}
-                {[
-                  { top: 0, left: 0, borderTop: '2px solid #c9a227', borderLeft: '2px solid #c9a227', borderTopLeftRadius: '1rem' },
-                  { top: 0, right: 0, borderTop: '2px solid #c9a227', borderRight: '2px solid #c9a227', borderTopRightRadius: '1rem' },
-                  { bottom: 0, left: 0, borderBottom: '2px solid #c9a227', borderLeft: '2px solid #c9a227', borderBottomLeftRadius: '1rem' },
-                  { bottom: 0, right: 0, borderBottom: '2px solid #c9a227', borderRight: '2px solid #c9a227', borderBottomRightRadius: '1rem' },
-                ].map((s, i) => (
-                  <div key={i} className="absolute w-6 h-6" style={s} />
-                ))}
-              </div>
+/* ─── Skill Pills ─────────────────────────────────────────────── */
+const skillPills = [
+  { label: 'React',          type: 'cyan' },
+  { label: 'Flutter',        type: 'violet' },
+  { label: 'FastAPI',        type: 'cyan' },
+  { label: 'Python',         type: 'cyan' },
+  { label: 'TFLite',         type: 'violet' },
+  { label: 'PyTorch',        type: 'violet' },
+  { label: 'LangChain',      type: 'violet' },
+  { label: 'PostgreSQL',     type: 'cyan' },
+  { label: 'Supabase',       type: 'cyan' },
+  { label: 'Docker',         type: 'amber' },
+  { label: 'GitHub Apps',    type: 'amber' },
+  { label: 'Computer Vision',type: 'violet' },
+  { label: 'Laravel',        type: 'cyan' },
+  { label: 'Groq API',       type: 'violet' },
+];
 
-              {/* Floating cards */}
-              <motion.div
-                animate={{ y: [-5, 5, -5] }}
-                transition={{ duration: 4, repeat: Infinity }}
-                className="absolute -bottom-6 -right-6 glass-card rounded-2xl p-4 text-center"
-                style={{ border: '1px solid rgba(201,162,39,0.25)' }}
-              >
-                <p className="text-3xl font-black gradient-text-gold">3+</p>
-                <p className="text-[11px] mt-1 tracking-wider" style={{ color: '#607d8b', fontFamily: 'JetBrains Mono, monospace' }}>Years<br />Experience</p>
-              </motion.div>
+export default function About() {
+  return (
+    <section id="about" className="section" style={{ background: 'rgba(10,22,40,0.5)' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <SectionTitle label="// get to know me" title="About" titleAccent="Me" />
 
-              <motion.div
-                animate={{ y: [5, -5, 5] }}
-                transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                className="absolute -top-4 -left-4 glass-card rounded-2xl p-4 text-center"
-                style={{ border: '1px solid rgba(176,190,197,0.2)' }}
-              >
-                <p className="text-3xl font-black gradient-text-silver">20+</p>
-                <p className="text-[11px] mt-1 tracking-wider" style={{ color: '#607d8b', fontFamily: 'JetBrains Mono, monospace' }}>Projects<br />Completed</p>
-              </motion.div>
-            </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'start' }}>
 
-            {/* Dot grid */}
-            <div
-              className="absolute -z-10 w-40 h-40 opacity-20"
-              style={{
-                bottom: '-20px', left: '-10px',
-                backgroundImage: 'radial-gradient(circle, #c9a227 1px, transparent 1px)',
-                backgroundSize: '18px 18px',
-              }}
-            />
+          {/* LEFT — JSON terminal */}
+          <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.8 }}>
+            <JsonTerminal />
           </motion.div>
 
-          {/* Right - Content */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="flex flex-col gap-6"
-          >
+          {/* RIGHT — bio + pills */}
+          <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }} transition={{ duration: 0.8 }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+
             <div>
-              <h3 className="text-2xl font-bold mb-4 text-white">
-                I build things for the <span className="gradient-text-gold">web</span>
+              <h3 style={{ fontFamily: 'Space Grotesk', fontSize: '1.6rem', fontWeight: 700, marginBottom: '16px' }}>
+                I build systems that{' '}
+                <span style={{ color: 'var(--cyan)', textShadow: '0 0 20px var(--cyan-glow)' }}>think.</span>
               </h3>
-              <p className="leading-relaxed mb-4" style={{ color: '#78909c', fontFamily: 'Rajdhani, sans-serif', fontWeight: 400 }}>
-                I'm <strong style={{ color: '#e8edf5' }}>Sudesh Hansika</strong>, a passionate Software Engineer
-                based in Sri Lanka. I specialize in building exceptional digital experiences that
-                are fast, accessible, and visually stunning.
-              </p>
-              <p className="leading-relaxed mb-4" style={{ color: '#78909c', fontFamily: 'Rajdhani, sans-serif', fontWeight: 400 }}>
-                With 3+ years of experience in full-stack development, I've worked on everything
-                from startup MVPs to large-scale enterprise applications. I love turning
-                complex problems into elegant, simple solutions.
-              </p>
-              <p className="leading-relaxed" style={{ color: '#78909c', fontFamily: 'Rajdhani, sans-serif', fontWeight: 400 }}>
-                When I'm not coding, you'll find me exploring new technologies, contributing to
-                open-source projects, or leveling up my DSA skills.
-              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', color: 'var(--text-muted)', fontFamily: 'Inter', fontSize: '15px', lineHeight: 1.8 }}>
+                <p>
+                  Final-year Computer Science undergrad building at the intersection of full-stack engineering and applied AI.
+                  I don't just use frameworks — I understand what's happening underneath them.
+                </p>
+                <p>
+                  Currently shipping an{' '}
+                  <span style={{ color: 'var(--cyan)', fontWeight: 600 }}>AI Code Review Agent</span> powered by LLaMA 3.3 70B,
+                  a{' '}
+                  <span style={{ color: '#A87AFF', fontWeight: 600 }}>Computer Vision FYP</span> on outfit social perception,
+                  and a{' '}
+                  <span style={{ color: 'var(--amber)', fontWeight: 600 }}>Flutter emotion-detection app</span> with TFLite inference.
+                </p>
+                <p>
+                  Open to internships and ideas worth building.
+                </p>
+              </div>
             </div>
 
-            {/* Highlights Grid */}
-            <div className="grid grid-cols-2 gap-4 mt-2">
-              {highlights.map(({ icon: Icon, label, desc }, i) => (
-                <motion.div
-                  key={label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.03, borderColor: 'rgba(201,162,39,0.3)' }}
-                  className="glass-card rounded-xl p-4 cursor-default"
-                >
-                  <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
-                    style={{ background: 'linear-gradient(135deg, rgba(201,162,39,0.15), rgba(139,105,20,0.1))' }}
-                  >
-                    <Icon size={18} style={{ color: '#c9a227' }} />
-                  </div>
-                  <h4 className="font-bold text-sm mb-1" style={{ color: '#e8edf5', fontFamily: 'Cinzel, serif' }}>{label}</h4>
-                  <p className="text-xs leading-relaxed" style={{ color: '#546e7a', fontFamily: 'Rajdhani, sans-serif' }}>{desc}</p>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Info list */}
-            <div className="grid grid-cols-2 gap-3 mt-2">
+            {/* Info grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               {[
-                { label: 'Name', value: 'Sudesh Hansika' },
                 { label: 'Location', value: 'Sri Lanka 🇱🇰' },
                 { label: 'Email', value: 'sudeshhansika@gmail.com' },
-                { label: 'Availability', value: 'Open to Offers ✦' },
+                { label: 'Status', value: 'Final Year, CS' },
+                { label: 'Available', value: 'Internships ✦' },
               ].map(({ label, value }) => (
-                <div key={label} className="flex flex-col gap-1">
-                  <span className="text-[10px] tracking-widest uppercase" style={{ color: '#455a64', fontFamily: 'JetBrains Mono, monospace' }}>{label}</span>
-                  <span className="text-sm font-semibold" style={{ color: '#b0bec5' }}>{value}</span>
+                <div key={label}>
+                  <div style={{ fontFamily: 'JetBrains Mono', fontSize: '9px', color: 'var(--text-dim)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: '4px' }}>{label}</div>
+                  <div style={{ fontFamily: 'Inter', fontSize: '13px', fontWeight: 600, color: 'var(--text-b)' }}>{value}</div>
                 </div>
               ))}
             </div>
 
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="btn-gold w-fit px-8 py-3 rounded-full text-sm mt-2"
-            >
-              Let's Connect
-            </motion.a>
+            {/* Skill pills */}
+            <div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: '10px', color: 'var(--text-dim)', letterSpacing: '0.14em', marginBottom: '14px' }}>// stack</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {skillPills.map(({ label, type }, i) => (
+                  <motion.span key={label}
+                    className={`pill${type === 'violet' ? ' pill-violet' : type === 'amber' ? ' pill-amber' : ''}`}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.04 }}
+                    whileHover={{ scale: 1.1 }}>
+                    {label}
+                  </motion.span>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <a href="#projects" className="btn-solid-cyan" style={{ fontSize: '13px', padding: '10px 22px' }}>View Projects</a>
+              <a href="#contact" className="btn-cyan" style={{ fontSize: '13px', padding: '10px 22px' }}>Let's Talk</a>
+            </div>
           </motion.div>
         </div>
       </div>
     </section>
   );
-};
-
-export { SectionTitle as default_SectionTitle };
-export default About;
+}
