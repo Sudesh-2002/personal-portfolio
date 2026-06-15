@@ -146,7 +146,7 @@ export default function Hero() {
           }}>
             <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:'#00E676', boxShadow:'0 0 8px #00E676', animation:'pulse 2s infinite' }} />
             <span style={{ fontFamily:'JetBrains Mono', fontSize:'11px', color:'#00E676', letterSpacing:'0.14em' }}>
-              FINAL YEAR · CS · SRI LANKA 🇱🇰
+              FINAL YEAR SE · SRI LANKA 🇱🇰
             </span>
           </span>
         </motion.div>
@@ -155,12 +155,18 @@ export default function Hero() {
         <motion.div {...stagger(0.25)}>
           <h1 style={{
             fontFamily: 'Space Grotesk', fontWeight: 700,
-            fontSize: 'clamp(4rem, 12vw, 9rem)',
-            lineHeight: 0.95, letterSpacing: '-0.03em',
-            color: '#FFFFFF',
-            textShadow: '0 0 80px rgba(0,245,255,0.15)',
+            fontSize: 'clamp(2.8rem, 8vw, 6.5rem)',
+            lineHeight: 0.92, letterSpacing: '-0.03em',
+            margin: 0,
           }}>
-            SUDESH
+            <span style={{ display: 'block', color: '#FFFFFF', textShadow: '0 0 60px rgba(0,245,255,0.12)' }}>SUDESH</span>
+            <span style={{
+              display: 'block',
+              background: 'linear-gradient(90deg, #00F5FF, #7B2FFF, #00F5FF)',
+              backgroundSize: '200% auto',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+              animation: 'shimmer 4s linear infinite',
+            }}>HANSIKA</span>
           </h1>
         </motion.div>
 
@@ -170,10 +176,11 @@ export default function Hero() {
           <span style={{ fontFamily:'Inter', fontSize:'clamp(14px,2.5vw,20px)', fontWeight:600, color:'#E8EDF2' }}>
             <TypeAnimation
               sequence={[
-                'Full Stack Engineer',        2400,
-                'AI/ML Engineer',             2400,
-                'Computer Vision Builder',    2400,
-                'GitHub App Developer',       2400,
+                'Full Stack Engineer',        2200,
+                'AI/ML Engineer',             2200,
+                'Computer Vision Builder',    2200,
+                'GitHub App Developer',       2200,
+                'SE Student · Final Year',    2200,
               ]}
               wrapper="span" speed={60} repeat={Infinity}
             />
@@ -187,7 +194,7 @@ export default function Hero() {
           color: 'var(--text-muted)', maxWidth: '540px', lineHeight: 1.7,
         }}>
           I build systems that ship — web apps, mobile apps, and the occasional neural network.
-          Final year CS. Full time builder.
+          Final year Software Engineering. Full time builder.
         </motion.p>
 
         {/* CTAs */}

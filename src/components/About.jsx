@@ -26,7 +26,7 @@ export function SectionTitle({ label, title, titleAccent }) {
 const jsonLines = [
   { txt: '{',                                                             indent: 0, color: '#E8EDF2' },
   { txt: '"name":',          val: '"Sudesh"',                            indent: 1, color: '#7B2FFF', vc: '#00F5FF' },
-  { txt: '"year":',          val: '"Final Year, CS"',                    indent: 1, color: '#7B2FFF', vc: '#FF9500' },
+  { txt: '"year":',          val: '"Final Year, SE"',                    indent: 1, color: '#7B2FFF', vc: '#FF9500' },
   { txt: '"based_in":',      val: '"Sri Lanka 🇱🇰"',                     indent: 1, color: '#7B2FFF', vc: '#00E676' },
   { txt: '"role":',          val: null,                                   indent: 1, color: '#7B2FFF' },
   { txt: '  "Full Stack Engineer",',                                      indent: 2, color: '#00F5FF' },
@@ -125,7 +125,7 @@ export default function About() {
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', color: 'var(--text-muted)', fontFamily: 'Inter', fontSize: '15px', lineHeight: 1.8 }}>
                 <p>
-                  Final-year Computer Science undergrad building at the intersection of full-stack engineering and applied AI.
+                  Final-year Software Engineering undergrad building at the intersection of full-stack engineering and applied AI.
                   I don't just use frameworks — I understand what's happening underneath them.
                 </p>
                 <p>
@@ -147,7 +147,7 @@ export default function About() {
               {[
                 { label: 'Location', value: 'Sri Lanka 🇱🇰' },
                 { label: 'Email', value: 'sudeshhansika@gmail.com' },
-                { label: 'Status', value: 'Final Year, CS' },
+                { label: 'Status', value: 'Final Year, SE' },
                 { label: 'Available', value: 'Internships ✦' },
               ].map(({ label, value }) => (
                 <div key={label}>
