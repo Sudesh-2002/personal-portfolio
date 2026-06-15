@@ -10,7 +10,7 @@
 
 [![Portfolio](https://img.shields.io/badge/🌐_Live_Portfolio-00F5FF?style=flat-square&logoColor=black)](https://personal-portfolio-six-smoky-79.vercel.app)
 [![GitHub](https://img.shields.io/badge/GitHub-Sudesh--2002-181717?style=flat-square&logo=github)](https://github.com/Sudesh-2002)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Sudesh_Hansika-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/sudeshhansika)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Sudesh_Hansika-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/sudesh-hansika-4a9794320)
 [![Email](https://img.shields.io/badge/Email-sudeshhansika@gmail.com-FF9500?style=flat-square&logo=gmail&logoColor=white)](mailto:sudeshhansika@gmail.com)
 [![Location](https://img.shields.io/badge/Based_in-Sri_Lanka_🇱🇰-00E676?style=flat-square)](https://github.com/Sudesh-2002)
 
@@ -106,17 +106,7 @@ main branch → Vercel build → Live at personal-portfolio-six-smoky-79.vercel.
 
 ---
 
-## 📊 GitHub Stats
 
-<div align="center">
-
-<img height="180em" src="https://github-readme-stats.vercel.app/api?username=Sudesh-2002&show_icons=true&theme=tokyonight&include_all_commits=true&count_private=true&hide_border=true&bg_color=0D1117&title_color=00F5FF&icon_color=7B2FFF&text_color=E8EDF2" />
-
-<img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sudesh-2002&layout=compact&langs_count=8&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=00F5FF&text_color=E8EDF2" />
-
-</div>
-
----
 
 ## 🤝 Connect
 
@@ -125,7 +115,7 @@ main branch → Vercel build → Live at personal-portfolio-six-smoky-79.vercel.
 | Platform | Link |
 |---|---|
 | 🌐 Portfolio | [personal-portfolio-six-smoky-79.vercel.app](https://personal-portfolio-six-smoky-79.vercel.app) |
-| 💼 LinkedIn | [linkedin.com/in/sudeshhansika](https://linkedin.com/in/sudeshhansika) |
+| 💼 LinkedIn | [linkedin.com/in/sudesh-hansika-4a9794320](https://linkedin.com/in/sudesh-hansika-4a9794320) |
 | 🐙 GitHub | [github.com/Sudesh-2002](https://github.com/Sudesh-2002) |
 | 📧 Email | [sudeshhansika@gmail.com](mailto:sudeshhansika@gmail.com) |
 
