@@ -55,7 +55,6 @@ const categories = [
       { name: 'MySQL',      icon: 'mysql/mysql-original.svg' },
       { name: 'Supabase',   icon: 'supabase/supabase-original.svg' },
       { name: 'Firebase',   icon: 'firebase/firebase-original.svg' },
-      { name: 'Redis',      icon: 'redis/redis-original.svg' },
       { name: 'MongoDB',    icon: 'mongodb/mongodb-original.svg' },
     ],
   },
