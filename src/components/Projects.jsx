@@ -43,6 +43,7 @@ const projects = [
     long: 'Full-stack internship marketplace. React SPA on Vercel with Tailwind UI, RESTful Laravel API on Render, and Supabase for auth and PostgreSQL database. Supports employer and student roles.',
     stack: ['React', 'Laravel', 'Supabase', 'PostgreSQL', 'Vercel'],
     github: 'https://github.com/Sudesh-2002/InternHub',
+    live: 'https://intern-hub-olive.vercel.app',
     accent: '#FF9500',
   },
   {
