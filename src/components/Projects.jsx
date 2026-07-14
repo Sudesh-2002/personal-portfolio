@@ -11,17 +11,18 @@ const projects = [
     desc: 'GitHub App that automatically reviews PRs with LLaMA 3.3 70B — deployed on Render.',
     long: 'Built a production GitHub App that hooks into pull request events, extracts diffs, and uses LLaMA 3.3 70B via Groq API to generate structured code reviews. Full FastAPI backend with PyGithub integration.',
     stack: ['FastAPI', 'Groq API', 'LLaMA 3.3 70B', 'PyGithub', 'Render'],
-    github: 'https://github.com/Sudesh-2002',
+    github: 'https://github.com/Sudesh-2002/code-review-agent',
     accent: '#00F5FF',
   },
   {
-    tag: 'AI · CV',
+    tag: 'AI · Full Stack',
     tagClass: 'tag-ai',
-    name: 'Outfit Perception AI',
-    desc: 'Deep learning system predicting social perception of outfit choices using CV + Likert-scale annotation.',
-    long: 'Final Year Project. Trains a CNN on annotated outfit images scored on social perception (professionalism, approachability, confidence) using Likert-scale labels. Includes an AR try-on prototype.',
-    stack: ['Computer Vision', 'PyTorch', 'OpenCV', 'Flask', 'Annotation Pipeline'],
-    github: 'https://github.com/Sudesh-2002',
+    name: 'AI Resume Matcher',
+    desc: 'Full-stack app that semantically matches resumes to job descriptions using vector embeddings and LLM-generated gap analysis.',
+    long: 'Upload a PDF resume → Groq LLaMA-3.3-70b extracts structured JSON (skills, experience, education). Add a job description → same pipeline runs. Both docs are embedded into 384-dim vectors (HuggingFace all-MiniLM-L6-v2) and compared via MongoDB Atlas Vector Search. Final score = 60% semantic similarity + 40% skill overlap, plus a Groq-generated coaching narrative with strengths, gaps, and a hiring verdict.',
+    stack: ['React', 'FastAPI', 'Groq API', 'LLaMA 3.3 70B', 'MongoDB Atlas', 'Vector Search', 'HuggingFace', 'Vercel', 'Render'],
+    github: 'https://github.com/Sudesh-2002/ai-resume-matcher',
+    live: 'https://ai-resume-matcher-psi-five.vercel.app',
     accent: '#7B2FFF',
   },
   {
@@ -31,7 +32,7 @@ const projects = [
     desc: 'Flutter app detecting facial emotions via RAF-DB trained model and recommending music accordingly.',
     long: 'Real-time emotion detection pipeline using TFLite on-device inference. RAF-DB trained model identifies 7 emotions from the front camera and maps them to music recommendations via YouTube & Spotify.',
     stack: ['Flutter', 'TFLite', 'RAF-DB', 'Spotify API', 'Dart'],
-    github: 'https://github.com/Sudesh-2002',
+    github: 'https://github.com/Sudesh-2002/mood_music_app',
     accent: '#A87AFF',
   },
   {
@@ -41,17 +42,17 @@ const projects = [
     desc: 'Internship platform with React frontend on Vercel + Laravel backend on Render + Supabase DB.',
     long: 'Full-stack internship marketplace. React SPA on Vercel with Tailwind UI, RESTful Laravel API on Render, and Supabase for auth and PostgreSQL database. Supports employer and student roles.',
     stack: ['React', 'Laravel', 'Supabase', 'PostgreSQL', 'Vercel'],
-    github: 'https://github.com/Sudesh-2002',
+    github: 'https://github.com/Sudesh-2002/InternHub',
     accent: '#FF9500',
   },
   {
-    tag: 'Creative',
-    tagClass: 'tag-creative',
-    name: 'Portfolio v1',
-    desc: 'Animated gallery hallway with chibi characters, SVG sconces, volumetric fog — because why not.',
-    long: 'First-gen portfolio: a scroll-driven 3D-like hallway made entirely in React, Framer Motion, and CSS. Chibi character avatars, custom SVG wall sconces, volumetric fog effects and GSAP-powered transitions.',
-    stack: ['React', 'Framer Motion', 'GSAP', 'SVG', 'CSS'],
-    github: 'https://github.com/Sudesh-2002',
+    tag: 'Backend · Java',
+    tagClass: 'tag-fullstack',
+    name: 'Warehouse Order & Inventory System',
+    desc: 'Production-grade Spring Boot backend for multi-warehouse stock management, order lifecycle, and concurrency-safe inventory deduction.',
+    long: 'Models real-world foodservice distribution: tracks stock across multiple warehouses, manages full order lifecycle (PENDING → CONFIRMED → SHIPPED / CANCELLED), applies tiered bulk-discount pricing via Strategy pattern, and uses pessimistic locking to prevent overselling under concurrent load. Includes Swagger/OpenAPI 3 docs, GitHub Actions CI, and full Testcontainers integration tests against a real PostgreSQL instance.',
+    stack: ['Java 21', 'Spring Boot', 'PostgreSQL', 'JUnit 5', 'Mockito', 'Testcontainers', 'Swagger / OpenAPI 3', 'GitHub Actions', 'Maven'],
+    github: 'https://github.com/Sudesh-2002/warehouse-management-system',
     accent: '#00E676',
   },
   {
@@ -144,21 +145,36 @@ function ProjectCard({ project, index }) {
         </div>
       )}
 
-      {/* GitHub link */}
+      {/* Links */}
       {!project.muted && (
-        <a href={project.github} target="_blank" rel="noopener noreferrer"
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: '6px',
-            fontFamily: 'Inter', fontSize: '13px', fontWeight: 600,
-            color: project.accent, textDecoration: 'none',
-            marginTop: 'auto', paddingTop: '4px',
-            transition: 'gap 0.2s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.gap = '10px'}
-          onMouseLeave={e => e.currentTarget.style.gap = '6px'}
-        >
-          GitHub <ArrowUpRight size={14} />
-        </a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: 'auto', paddingTop: '4px', flexWrap: 'wrap' }}>
+          <a href={project.github} target="_blank" rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '6px',
+              fontFamily: 'Inter', fontSize: '13px', fontWeight: 600,
+              color: project.accent, textDecoration: 'none',
+              transition: 'gap 0.2s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.gap = '10px'}
+            onMouseLeave={e => e.currentTarget.style.gap = '6px'}
+          >
+            GitHub <ArrowUpRight size={14} />
+          </a>
+          {project.live && (
+            <a href={project.live} target="_blank" rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                fontFamily: 'Inter', fontSize: '13px', fontWeight: 600,
+                color: '#00E676', textDecoration: 'none',
+                transition: 'gap 0.2s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.gap = '10px'}
+              onMouseLeave={e => e.currentTarget.style.gap = '6px'}
+            >
+              Live Demo <ArrowUpRight size={14} />
+            </a>
+          )}
+        </div>
       )}
     </motion.div>
   );
